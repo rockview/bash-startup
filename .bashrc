@@ -9,6 +9,7 @@ shopt -s histappend
 alias h='history 50'
 
 export EDITOR='vim'
+alias ls='ls -F'
 
 # Change directory to path or from history
 cd() {
@@ -19,7 +20,7 @@ cd() {
     # cd from history
     if [[ ${dir} =~ ^-[0-9]+$ ]]; then
         idx="${dir:1}"
-        if [[ ${idx} < ${len} ]]; then
+        if (( ${idx} < ${len} )); then
             dir="${__dirs[${idx}]}"
             __dirs=("${dir}" "${__dirs[@]:0:${idx}}" "${__dirs[@]:$((${idx}+1))}")
             builtin cd "${dir}"
