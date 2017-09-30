@@ -17,37 +17,33 @@ cd() {
     local len="${#__dirs[@]}"
     local dir="${1:-${HOME}}"
 
-    # cd from history
     if [[ ${dir} =~ ^-[0-9]+$ ]]; then
+        # cd from history
         idx="${dir:1}"
-        if (( ${idx} < ${len} )); then
-            dir="${__dirs[${idx}]}"
-            unset -v '__dirs[${idx}]'
-            __dirs=("${dir}" "${__dirs[@]}")
-            builtin cd "${dir}"
-        else
+        if (( ${idx} >= ${len} )); then
             echo "cd: out of range"
-        fi
-        return
-    fi
-
-    # cd to path
-    builtin cd "${dir}" || return
-
-    # Ensure full path
-    dir=$(pwd)
-
-    # Search history for path
-    for ((idx=0; idx<"${len}"; idx++)) do
-        if [[ ${dir} = ${__dirs[${idx}]} ]]; then
-            # Update history
-            unset -v '__dirs[${idx}]'
-            __dirs=("${dir}" "${__dirs[@]}")
             return
         fi
-    done
+        dir="${__dirs[${idx}]}"
+        unset -v '__dirs[${idx}]'
+        builtin cd "${dir}"
+    else
+        # cd to path
+        builtin cd "${dir}" || return
 
-    # Push new path
+        # Ensure full path
+        dir=$(pwd)
+
+        # Search history for path
+        for ((idx=0; idx<"${len}"; idx++)) do
+            if [[ ${dir} = ${__dirs[${idx}]} ]]; then
+                unset -v '__dirs[${idx}]'
+                break
+            fi
+        done
+    fi
+
+    # Push path
     __dirs=("${dir}" "${__dirs[@]}")
 }
 
