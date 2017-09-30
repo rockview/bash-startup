@@ -22,7 +22,8 @@ cd() {
         idx="${dir:1}"
         if (( ${idx} < ${len} )); then
             dir="${__dirs[${idx}]}"
-            __dirs=("${dir}" "${__dirs[@]:0:${idx}}" "${__dirs[@]:$((${idx}+1))}")
+            unset "__dirs[${idx}]"
+            __dirs=("${dir}" "${__dirs[@]}")
             builtin cd "${dir}"
         else
             echo "cd: out of range"
@@ -40,7 +41,8 @@ cd() {
     for ((idx=0; idx<"${len}"; idx++)) do
         if [[ ${dir} = ${__dirs[${idx}]} ]]; then
             # Update history
-            __dirs=("${dir}" "${__dirs[@]:0:${idx}}" "${__dirs[@]:$((${idx}+1))}")
+            unset "__dirs[${idx}]"
+            __dirs=("${dir}" "${__dirs[@]}")
             return
         fi
     done
