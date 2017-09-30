@@ -1,5 +1,14 @@
-# Prompt: inverted with newline
+# Prompt: inverted directory path with newline
 export PS1='\[\e[7m\]\w\[\e[m\]\n'
+
+# Command history
+export HISTSIZE=2000
+export HISTCONTROL='ignoredups:erasedups'
+export HISTIGNORE='ls:cd:d:pwd:h'
+shopt -s histappend
+alias h='history 50'
+
+export EDITOR='vim'
 
 # Change directory to path or from history
 cd() {
@@ -22,6 +31,9 @@ cd() {
 
     # cd to path
     builtin cd "${dir}" || return
+
+    # Ensure full path
+    dir=$(pwd)
 
     # Search history for path
     for ((idx=0; idx<"${len}"; idx++)) do
