@@ -22,7 +22,7 @@ cd() {
         idx="${dir:1}"
         if (( ${idx} < ${len} )); then
             dir="${__dirs[${idx}]}"
-            unset "__dirs[${idx}]"
+            unset -v '__dirs[${idx}]'
             __dirs=("${dir}" "${__dirs[@]}")
             builtin cd "${dir}"
         else
@@ -41,7 +41,7 @@ cd() {
     for ((idx=0; idx<"${len}"; idx++)) do
         if [[ ${dir} = ${__dirs[${idx}]} ]]; then
             # Update history
-            unset "__dirs[${idx}]"
+            unset -v '__dirs[${idx}]'
             __dirs=("${dir}" "${__dirs[@]}")
             return
         fi
